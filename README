@@ -1,0 +1,195 @@
+#Generate secret keys
+
+#Run
+"./manage.py shell" or "python manage.py shell"
+from django.core.management.utils import get_random_secret_key
+print(get_random_secret_key())
+
+{
+  "username": "test_user",
+  "password": "test_password",
+  "email": "test@example.com"
+}
+
+./manage.py makemigrations api --empty
+Migrations for 'api':
+  api\migrations\0001_initial.py
+
+<div
+    style="text-align: center; max-width: 1140px; margin-left: auto; margin-right: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+    <!-- Time Range Selector -->
+    <div style="margin-bottom: 20px;">
+        <button onclick="updateChart('7days')">Last 7 Days</button>
+        <button onclick="updateChart('month')">Last Month</button>
+        <button onclick="updateChart('year')">Last Year</button>
+        <button onclick="updateChart('all')">All Time</button>
+    </div>
+    <!-- Charts -->
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+            <h3>Payments Analytics</h3>
+            <canvas id="paymentTimeChart"></canvas>
+        </div>
+        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+            <h3>Student Registration Analytics</h3>
+            <canvas id="studentChart"></canvas>
+        </div>
+        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+            <h3>Enrollment Statistics Analytics</h3>
+            <canvas id="enrollmentStatsChart"></canvas>
+        </div>
+        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+            <h3>Total Number of Users</h3>
+            <p>Total Users: {{ total_user_count }}</p>
+        </div>
+    </div>
+</div>
+
+<div
+    style="text-align: center; max-width: 1140px; margin-left: auto; margin-right: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+            <h3>Top Liked Posts</h3>
+            <ul style="list-style-type: none; padding: 0;">
+                {% for blog in top_liked_blogs %}
+                <li>{{ blog.title }} - {{ blog.like_count }} likes</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+            <h3>Total Statistics</h3>
+            <p>Total Blogs: {{ total_blogs|default:0 }}</p>
+            <p>Total Comments: {{ total_comments|default:0 }}</p>
+            <p>Total Likes: {{ total_likes|default:0 }}</p>
+            <p>Total Albums: {{ total_albums|default:0 }}</p>
+            <p>Total Students: {{ total_students|default:0 }}</p>
+            <p>Total Enrollments: {{ total_enrollments|default:0 }}</p>
+            <p>Total Payments: {{ total_payments|default:0 }}</p>
+        </div>
+    </div>
+</div>
+<div class="card mt-8">
+    {% include "unfold/helpers/history.html" %}
+</div>
+<script>
+    // Define colors based on the logo
+    const primaryRed = '#FF6666';
+    const lightRed = '#FF9999';
+    const blue = '#66CCFF';
+
+    // Enrollment Statistics Chart
+    // Define colors based on the logo
+ 
+
+    // Enrollment Statistics Chart
+    var ctxEnrollment = document.getElementById('enrollmentStatsChart').getContext('2d');
+    var enrollmentData = JSON.parse('{{ enrollment_stats|default:"[]"|safe }}');
+
+    new Chart(ctxEnrollment, {
+        type: 'bar',
+        data: {
+            labels: enrollmentData.map(item => item.course__name),
+            datasets: [{
+                data: enrollmentData.map(item => item.count),
+                backgroundColor: [primaryRed, lightRed, blue]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Enrollment by Course',
+                    color: primaryRed
+                }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { color: primaryRed } },
+                x: { ticks: { color: primaryRed } }
+            }
+        }
+    });
+    // Student Chart
+    var ctxStudent = document.getElementById('studentChart').getContext('2d');
+    var studentData = JSON.parse('{{ student_registration_graph_data|default:"[]"|safe }}');
+    var studentChart = new Chart(ctxStudent, {
+        type: 'scatter',
+        data: {
+            labels: studentData.map(item => item.status),
+            datasets: [{
+                label: 'Number of Students',
+                data: studentData.map(item => item.count),
+                backgroundColor: lightRed,
+                borderColor: primaryRed,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: {
+                        color: primaryRed
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: { color: primaryRed }
+                },
+                x: {
+                    ticks: { color: primaryRed }
+                }
+            }
+        }
+    });
+
+    // Payment Time Chart for Days of the Week
+    var ctxPayment = document.getElementById('paymentTimeChart').getContext('2d');
+    var paymentData = JSON.parse('{{ payments_last_7_days|default:"[]"|safe }}');
+
+    // Initialize arrays for days of the week and payment amounts
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const paymentAmounts = Array(7).fill(0); // Initialize with zeros for each day of the week
+
+    // Aggregate payment amounts by day of the week
+    paymentData.forEach(item => {
+        const date = new Date(item.date);
+        const dayIndex = date.getDay(); // Get day index (0 for Sunday, 1 for Monday, etc.)
+        paymentAmounts[dayIndex] += item.amount; // Aggregate payments for the corresponding day
+    });
+
+    const paymentTimeChart = new Chart(ctxPayment, {
+        type: 'bar',
+        data: {
+            labels: daysOfWeek,
+            datasets: [{
+                label: 'Total Payment Amount',
+                data: paymentAmounts,
+                borderColor: primaryRed,
+                backgroundColor: lightRed,
+                borderWidth: 1,
+                fill: true,
+                tension: 0.1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: {
+                        color: primaryRed
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: primaryRed }
+                },
+                y: {
+                    ticks: { color: primaryRed }
+                }
+            }
+        }
+    });
+
+</script>
