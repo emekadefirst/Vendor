@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from django.templatetags.static import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -145,7 +146,13 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Africa/Lagos'
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join("static"),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SWAGGER_SETTINGS = {
@@ -155,37 +162,28 @@ SWAGGER_SETTINGS = {
 }
 
 UNFOLD = {
-    "SITE_TITLE": "Vendor",
-    "SITE_HEADER": "Vendor",
-    # "SITE_LOGO": lambda request: static("dfi.png"),
-    # "SITE_ICON": {
-    #     "light": lambda request: static("dfi.png"), 
-    #     "dark": lambda request: static("dfi.png"), 
-    # },
-    "THEME": "light",
+    "SITE_TITLE": "LJ HUB Admin",
+    "SITE_HEADER": "LJ HUB Admin",
+    "SITE_URL": "/",
+    "SITE_ICON": lambda request: static("vendor_img.png"),    
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "THEME": True,
     "COLORS": {
-        "primary": {
-            "50": "255 245 245",  
-            "100": "255 230 230",
-            "200": "255 204 204",
-            "300": "255 178 178",
-            "400": "255 128 128",
-            "500": "255 77 77",   
-            "600": "230 69 69",
-            "700": "204 60 60",
-            "800": "178 52 52",
-            "900": "153 43 43",
-            "950": "102 28 28",  # darkest red
-        },
-    },
-        "SITE_FAVICONS": [
-        {
-            "rel": "icon",
-            "sizes": "32x32",
-            "type": "image/png",
-            # "href": lambda request: static("dfi.png"),
-        },
-    ],
-    # "DASHBOARD_CALLBACK": "server.utils.dashboard_callback",
-}
+       "primary": {
+        "50": "153 101 21", 
+        "100": "153 101 21", 
+        "200": "153 101 21", 
+        "300": "153 101 21", 
+        "400": "153 101 21", 
+        "500": "153 101 21", 
+        "600": "153 101 21", 
+        "950": "153 101 21", 
+        "800": "153 101 21", 
+        "950": "153 101 21", 
+        "950": "153 101 21" 
+    }
 
+    },
+
+}

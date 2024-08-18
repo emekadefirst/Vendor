@@ -6,7 +6,7 @@ from .models.payment import Payment
 from .models.product import Category, Brand, Product, ProductImage, ProductRating
 from import_export.admin import ImportExportModelAdmin
 from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
-
+admin.autodiscover()
 
 @admin.register(Category)
 class CategoryAdmin(ModelAdmin):
