@@ -2,12 +2,14 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to="Category_images")
     
     def __str__(self):
         return self.name
     
 class Brand(models.Model):
     name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to="Brand_images")
     
     def __str__(self):
         return self.name

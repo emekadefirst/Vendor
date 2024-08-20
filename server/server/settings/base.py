@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'product',
     'user',
     # installed app
+    'django_filters',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
@@ -187,3 +188,10 @@ UNFOLD = {
     },
 
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
+
